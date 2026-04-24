@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model SjSiji {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_bianhao             String             @unique @db.VarChar(20)
+  sj_xingming            String             @db.VarChar(50)
+  sj_shouji              String             @unique @db.VarChar(20)
+  sj_mima                String             @db.VarChar(100)
+  sj_shenfenzheng        String?            @db.VarChar(20)
+  sj_chepaihao           String?            @db.VarChar(20)
+  sj_zhuangtai           Int                @default(1)
+  sj_ruzhi_shijian       DateTime?
+  sj_beizhu              String?
+  sj_chuangjian_shijian  DateTime           @default(now())
+  sj_gengxin_shijian     DateTime           @updatedAt
+
+  sj_dingdan             SjDingdan[]
+  sj_daka_jilu           SjDakaJilu[]
+  sj_dingwei_jilu        SjDingweiJilu[]
+  sj_jujue_jilu          SjJujueJilu[]
+  sj_yichang_shangbao    SjYichangShangbao[]
+  sj_jinji_shijian       SjJinjiShijian[]
+  sj_cheliang            SjCheliang[]
+
+  @@map("sj_siji")
+}
+
+model SjChengke {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_xingming            String             @db.VarChar(50)
+  sj_shouji              String             @db.VarChar(20)
+  sj_gongsi_mingcheng    String?            @db.VarChar(100)
+  sj_beizhu              String?
+  sj_chuangjian_shijian  DateTime           @default(now())
+
+  sj_dingdan             SjDingdan[]
+
+  @@map("sj_chengke")
+}
+
+model SjDingdan {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_dingdan_hao         String             @unique @db.VarChar(50)
+  sj_siji_id             Int?
+  sj_chengke_id          Int?
+  sj_cheliang_id         Int?
+  sj_shifadi_dizhi       String?            @db.VarChar(200)
+  sj_shifadi_weizhi      String?            @db.VarChar(100)
+  sj_mudedi_dizhi        String?            @db.VarChar(200)
+  sj_mudedi_weizhi       String?            @db.VarChar(100)
+  sj_tujingdian          String?
+  sj_licheng_shi         Decimal?           @db.Decimal(10, 2)
+  sj_licheng_zhong       Decimal?           @db.Decimal(10, 2)
+  sj_xingshi_licheng     Decimal?           @db.Decimal(10, 2)
+  sj_jine                Decimal?           @db.Decimal(10, 2)
+  sj_siji_ticheng        Decimal?           @db.Decimal(10, 2)
+  sj_zhuangtai           Int                @default(0)
+  sj_laiyuan             Int                @default(1)
+  sj_beizhu              String?
+  sj_kaishi_shijian      DateTime?
+  sj_wancheng_shijian    DateTime?
+  sj_chuangjian_ren      Int?
+  sj_chuangjian_shijian  DateTime           @default(now())
+  sj_gengxin_shijian     DateTime           @updatedAt
+
+  sj_siji                SjSiji?            @relation(fields: [sj_siji_id], references: [sj_id], onDelete: SetNull)
+  sj_chengke             SjChengke?         @relation(fields: [sj_chengke_id], references: [sj_id], onDelete: SetNull)
+  sj_cheliang            SjCheliang?        @relation(fields: [sj_cheliang_id], references: [sj_id], onDelete: SetNull)
+  sj_daka_jilu           SjDakaJilu[]
+  sj_dingwei_jilu        SjDingweiJilu[]
+  sj_jujue_jilu          SjJujueJilu[]
+  sj_yichang_shangbao    SjYichangShangbao[]
+  sj_jinji_shijian       SjJinjiShijian[]
+  sj_caiwu_jilu          SjCaiwuJilu[]
+
+  @@map("sj_dingdan")
+}
+
+model SjDakaJilu {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_dingdan_id          Int
+  sj_siji_id             Int
+  sj_daka_leixing        Int
+  sj_tujingdian_xuhao    Int?
+  sj_weizhi              String?            @db.VarChar(100)
+  sj_dizhi               String?            @db.VarChar(200)
+  sj_tupian_lujing       String?            @db.VarChar(200)
+  sj_daka_shijian        DateTime
+  sj_shangchuan_zhuangtai Int               @default(0)
+  sj_chuangjian_shijian  DateTime           @default(now())
+
+  sj_dingdan             SjDingdan          @relation(fields: [sj_dingdan_id], references: [sj_id], onDelete: Cascade)
+  sj_siji                SjSiji             @relation(fields: [sj_siji_id], references: [sj_id], onDelete: Cascade)
+
+  @@map("sj_daka_jilu")
+}
+
+model SjDingweiJilu {
+  sj_id                  BigInt             @id @default(autoincrement())
+  sj_dingdan_id          Int?
+  sj_siji_id             Int
+  sj_jingdu              Decimal?           @db.Decimal(10, 6)
+  sj_weidu               Decimal?           @db.Decimal(10, 6)
+  sj_haiba               Decimal?           @db.Decimal(8, 2)
+  sj_sudu                Decimal?           @db.Decimal(8, 2)
+  sj_fangxiang           Decimal?           @db.Decimal(5, 2)
+  sj_jingdu_zhi          Decimal?           @db.Decimal(5, 2)
+  sj_dingwei_shijian     DateTime
+  sj_shangchuan_zhuangtai Int               @default(0)
+  sj_chuangjian_shijian  DateTime           @default(now())
+
+  sj_dingdan             SjDingdan?         @relation(fields: [sj_dingdan_id], references: [sj_id], onDelete: SetNull)
+  sj_siji                SjSiji             @relation(fields: [sj_siji_id], references: [sj_id], onDelete: Cascade)
+
+  @@map("sj_dingwei_jilu")
+}
+
+model SjJujueJilu {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_dingdan_id          Int
+  sj_siji_id             Int
+  sj_jujue_yuanyin       String?            @db.VarChar(50)
+  sj_xiangxi_shuoming    String?
+  sj_shijian             DateTime           @default(now())
+  sj_weizhi              String?            @db.VarChar(100)
+  sj_chuli_zhuangtai     Int                @default(0)
+
+  sj_dingdan             SjDingdan          @relation(fields: [sj_dingdan_id], references: [sj_id], onDelete: Cascade)
+  sj_siji                SjSiji             @relation(fields: [sj_siji_id], references: [sj_id], onDelete: Cascade)
+
+  @@map("sj_jujue_jilu")
+}
+
+model SjYichangShangbao {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_dingdan_id          Int?
+  sj_siji_id             Int
+  sj_yichang_leixing     String             @db.VarChar(50)
+  sj_xiangxi_miaoshu     String
+  sj_tupian_lujing       String?
+  sj_weizhi              String?            @db.VarChar(100)
+  sj_shangbao_shijian    DateTime           @default(now())
+  sj_chuli_zhuangtai     Int                @default(0)
+  sj_chuli_ren           Int?
+  sj_chuli_fangan        String?
+  sj_chuli_shijian       DateTime?
+  sj_beizhu              String?
+
+  sj_dingdan             SjDingdan?         @relation(fields: [sj_dingdan_id], references: [sj_id], onDelete: SetNull)
+  sj_siji                SjSiji             @relation(fields: [sj_siji_id], references: [sj_id], onDelete: Cascade)
+  sj_guanliyuan          SjGuanliyuan?      @relation(fields: [sj_chuli_ren], references: [sj_id], onDelete: SetNull)
+
+  @@map("sj_yichang_shangbao")
+}
+
+model SjJinjiShijian {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_siji_id             Int
+  sj_dingdan_id          Int?
+  sj_chufa_shijian       DateTime
+  sj_weizhi              String?            @db.VarChar(100)
+  sj_tupian_lujing       String?
+  sj_luyin_lujing        String?            @db.VarChar(200)
+  sj_jiechu_shijian      DateTime?
+  sj_jiechu_fangshi      String?            @db.VarChar(20)
+  sj_chuli_ren           Int?
+  sj_chuli_jieguo        String?
+  sj_beizhu              String?
+
+  sj_siji                SjSiji             @relation(fields: [sj_siji_id], references: [sj_id], onDelete: Cascade)
+  sj_dingdan             SjDingdan?         @relation(fields: [sj_dingdan_id], references: [sj_id], onDelete: SetNull)
+  sj_guanliyuan          SjGuanliyuan?      @relation(fields: [sj_chuli_ren], references: [sj_id], onDelete: SetNull)
+
+  @@map("sj_jinji_shijian")
+}
+
+model SjCaiwuJilu {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_dingdan_id          Int?
+  sj_leixing             Int
+  sj_xiangmu             String?            @db.VarChar(50)
+  sj_jine                Decimal            @db.Decimal(10, 2)
+  sj_shoufu_fang         String?            @db.VarChar(50)
+  sj_beizhu              String?
+  sj_jiezhang_zhuangtai  Int                @default(0)
+  sj_jiezhang_shijian    DateTime?
+  sj_chuangjian_shijian  DateTime           @default(now())
+
+  sj_dingdan             SjDingdan?         @relation(fields: [sj_dingdan_id], references: [sj_id], onDelete: SetNull)
+
+  @@map("sj_caiwu_jilu")
+}
+
+model SjCaozuoRizhi {
+  sj_id                  BigInt             @id @default(autoincrement())
+  sj_caozuo_ren          Int?
+  sj_caozuo_leixing      String?            @db.VarChar(50)
+  sj_caozuo_xiangqing    String?
+  sj_ip_dizhi            String?            @db.VarChar(50)
+  sj_caozuo_shijian      DateTime           @default(now())
+
+  sj_guanliyuan          SjGuanliyuan?      @relation(fields: [sj_caozuo_ren], references: [sj_id], onDelete: SetNull)
+
+  @@map("sj_caozuo_rizhi")
+}
+
+model SjCheliang {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_chepaihao           String             @unique @db.VarChar(20)
+  sj_pinpai              String?            @db.VarChar(50)
+  sj_xinghao             String?            @db.VarChar(50)
+  sj_yanse               String?            @db.VarChar(20)
+  sj_nianfen             Int?
+  sj_zhuangtai           Int                @default(1)
+  sj_siji_id             Int?
+  sj_beizhu              String?
+  sj_chuangjian_shijian  DateTime           @default(now())
+  sj_gengxin_shijian     DateTime           @updatedAt
+
+  sj_siji                SjSiji?            @relation(fields: [sj_siji_id], references: [sj_id], onDelete: SetNull)
+  sj_dingdan             SjDingdan[]
+
+  @@map("sj_cheliang")
+}
+
+model SjGuanliyuan {
+  sj_id                  Int                @id @default(autoincrement())
+  sj_zhanghao            String             @unique @db.VarChar(50)
+  sj_mima                String             @db.VarChar(100)
+  sj_xingming            String             @db.VarChar(50)
+  sj_shouji              String?            @db.VarChar(20)
+  sj_zhuangtai           Int                @default(1)
+  sj_chuangjian_shijian  DateTime           @default(now())
+  sj_gengxin_shijian     DateTime           @updatedAt
+
+  sj_yichang_shangbao    SjYichangShangbao[]
+  sj_jinji_shijian       SjJinjiShijian[]
+  sj_caozuo_rizhi        SjCaozuoRizhi[]
+
+  @@map("sj_guanliyuan")
+}
