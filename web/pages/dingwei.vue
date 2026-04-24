@@ -158,7 +158,9 @@ function initMap() {
   if (typeof window === 'undefined') return
   const AMap = (window as any).AMap
   if (!AMap) {
-    console.error('高德地图API未加载')
+    console.warn('高德地图API未加载，将在1秒后重试...')
+    // 延迟重试，等待脚本加载
+    setTimeout(initMap, 1000)
     return
   }
   

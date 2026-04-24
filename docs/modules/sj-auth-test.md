@@ -15,7 +15,7 @@
 ```env
 DATABASE_URL="mysql://用户名:密码@localhost:3306/siji_db"
 JWT_SECRET="sj-jwt-secret-key-change-in-production"
-AMAP_KEY="1f94bda96c69813dbd213d3cb245206f"
+AMAP_KEY="***************************"
 ```
 
 ### 2. 数据库初始化

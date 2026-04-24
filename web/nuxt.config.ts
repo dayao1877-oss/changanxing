@@ -4,9 +4,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     databaseUrl: process.env.DATABASE_URL,
-    amapKey: process.env.AMAP_KEY || '1f94bda96c69813dbd213d3cb245206f',
     jwtSecret: process.env.JWT_SECRET || 'sj-jwt-secret-key-for-development-only',
-    public: {}
+    public: {
+      amapKey: process.env.AMAP_KEY || ''
+    }
   },
 
   modules: [

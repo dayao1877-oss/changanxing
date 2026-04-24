@@ -50,7 +50,8 @@ onUnmounted(() => {
 function sjInitMap() {
   if (typeof window === 'undefined') return
   if (!(window as any).AMap) {
-    console.error('高德地图API未加载')
+    console.warn('高德地图API未加载，将在1秒后重试...')
+    setTimeout(sjInitMap, 1000)
     return
   }
   

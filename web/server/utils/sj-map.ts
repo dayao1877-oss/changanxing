@@ -5,8 +5,8 @@ import { ofetch } from 'ofetch'
  * 集成高德地图 API
  */
 
-// 高德地图 API Key (从环境变量获取)
-const AMAP_KEY = process.env.AMAP_KEY || '1f94bda96c69813dbd213d3cb245206f'
+// 从环境变量获取高德地图 API Key
+const AMAP_KEY = process.env.AMAP_KEY || ''
 
 /**
  * 地理编码：地址转经纬度

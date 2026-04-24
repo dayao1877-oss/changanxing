@@ -118,6 +118,9 @@ import { ref, watch, nextTick, onUnmounted } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { SJ_XIAN_LOCATIONS } from '~/composables/sj-xian-locations'
 
+const config = useRuntimeConfig()
+const AMAP_KEY = config.public.amapKey || ''
+
 const props = defineProps<{
   sjTitle?: string
   sjVisible: boolean
@@ -137,8 +140,6 @@ const sjSelectedLocation = ref({
   sj_jingdu: 0,
   sj_weidu: 0
 })
-
-const AMAP_KEY = '1f94bda96c69813dbd213d3cb245206f'
 
 watch(() => props.sjVisible, (val) => {
   if (val) {
@@ -190,7 +191,8 @@ function sjInitMap() {
   if (typeof window === 'undefined') return
   const AMap = (window as any).AMap
   if (!AMap) {
-    console.error('高德地图API未加载')
+    console.warn('高德地图API未加载，将在1秒后重试...')
+    setTimeout(sjInitMap, 1000)
     return
   }
   
